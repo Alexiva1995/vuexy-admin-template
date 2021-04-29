@@ -1,62 +1,46 @@
-@isset($pageConfigs)
-{!! Helper::updatePageConfig($pageConfigs) !!}
-@endisset
-
 <!DOCTYPE html>
-{{-- {!! Helper::applClasses() !!} --}}
-@php
-$configData = Helper::applClasses();
-@endphp
-<html lang="@if(session()->has('locale')){{session()->get('locale')}}@else{{$configData['defaultLanguage']}}@endif" data-textdirection="{{ env('MIX_CONTENT_DIRECTION') === 'rtl' ? 'rtl' : 'ltr' }}" class="{{ ($configData['theme'] === 'light') ? '' : $configData['layoutTheme'] }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
 
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <meta name="csrf-token" content="{{ csrf_token() }}">
+        <title>{{ config('app.name', 'Laravel') }}</title>
 
-  <title>@yield('title') - Vuexy Vuejs, HTML & Laravel Admin Dashboard Template</title>
-  <link rel="shortcut icon" type="image/x-icon" href="{{asset('images/logo/favicon.ico')}}">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
 
-  {{-- Include core + vendor Styles --}}
-  @include('layouts.panels.styles')
+        <!-- Styles -->
+        <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 
-  {{-- Include core + vendor Styles --}}
-  @include('layouts.panels.styles')
-</head>
+        @livewireStyles
 
+        <!-- Scripts -->
+        <script src="{{ mix('js/app.js') }}" defer></script>
+    </head>
+    <body class="font-sans antialiased">
+        <x-jet-banner />
 
+        <div class="min-h-screen bg-gray-100">
+            @livewire('navigation-menu')
 
-<body class="vertical-layout vertical-menu-modern {{ $configData['blankPageClass'] }} {{ $configData['bodyClass'] }} {{($configData['theme'] === 'dark') ? 'dark-layout' : 'light' }}
-    data-menu=" vertical-menu-modern" data-layout="{{ ($configData['theme'] === 'light') ? '' : $configData['layoutTheme'] }}" style="{{ $configData['bodyStyle'] }}" data-framework="laravel" data-asset-path="{{ asset('/')}}">
+            <!-- Page Heading -->
+            @if (isset($header))
+                <header class="bg-white shadow">
+                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                        {{ $header }}
+                    </div>
+                </header>
+            @endif
 
-  <!-- BEGIN: Content-->
-  <div class="app-content content {{ $configData['pageClass'] }}">
-    <div class="content-wrapper {{ $configData['layoutWidth'] === 'boxed' ? 'container p-0' : '' }}">
-      <div class="content-body">
+            <!-- Page Content -->
+            <main>
+                {{ $slot }}
+            </main>
+        </div>
 
-        {{-- Include Startkit Content --}}
-        @yield('content')
+        @stack('modals')
 
-      </div>
-    </div>
-  </div>
-  <!-- End: Content-->
-
-  {{-- include default scripts --}}
-  @include('layouts.panels.scripts')
-
-  <script type="text/javascript">
-    $(window).on('load', function() {
-      if (feather) {
-        feather.replace({
-          width: 14
-          , height: 14
-        });
-      }
-    })
-
-  </script>
-</body>
-
+        @livewireScripts
+    </body>
 </html>

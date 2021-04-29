@@ -14,9 +14,8 @@
         "laravel/jetstream": "^2.3",
         "laravel/sanctum": "^2.6",
         "laravel/tinker": "^2.5",
-        "livewire/livewire": "^2.0",
-        "laravel/ui": "^3.0"
-
+        "laravel/ui": "^3.0",
+        "livewire/livewire": "^2.0"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
@@ -67,4 +66,3 @@
     "minimum-stability": "dev",
     "prefer-stable": true
 }
-
